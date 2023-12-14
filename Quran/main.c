@@ -56,16 +56,50 @@ void str_cpy(char* dest, char* src) {
     return;
 }
 
+/*
+ char* juzz_name;
+ int juzz_number;
+ int surah_number;
+ char* surah_name;
+ double num_pages;
+ int num_ayahs;
+ char* description; // ex. it is about the day of judgement
+ */
 
-Surah* init_surah(char* name, double num_pages, int num_ayahs, int surah_number)
+Surah* init_surah(char* juzz_name, int juzz_num, int surah_num, char* surah_name, double num_pages, int num_ayahs, char* description)
 {
     Surah* surah = malloc(sizeof(Surah));
-    (*surah).surah_number = surah_number;
-    (*surah).surah_name = malloc(sizeof(char) * str_len(name) + 1);
-    str_cpy((*surah).surah_name, name);
+    if (surah == NULL) {
+        printf("Failed at line: %d", __LINE__);
+        exit(1);
+    }
+    
+    (*surah).juzz_name = malloc(sizeof(char) * str_len(juzz_name) + 1);
+    if ((*surah).juzz_name == NULL) {
+        printf("Failed at line: %d", __LINE__);
+        exit(1);
+    }
+    str_cpy((*surah).juzz_name, juzz_name);
+    
+    (*surah).juzz_number = juzz_num;
+    (*surah).surah_number = surah_num;
+    
+    (*surah).surah_name = malloc(sizeof(char) * str_len(surah_name) + 1);
+    if ((*surah).surah_name == NULL) {
+        printf("Failed at line: %d", __LINE__);
+        exit(1);
+    }
+    str_cpy((*surah).surah_name, surah_name);
+    
     (*surah).num_ayahs = num_ayahs;
     (*surah).num_pages = num_pages;
     
+    (*surah).description = malloc(sizeof(char) * str_len(description) + 1);
+    if ((*surah).description == NULL) {
+        printf("Failed at line: %d", __LINE__);
+        exit(1);
+    }
+    str_cpy((*surah).description, description);
     
     return surah;
 }
@@ -74,15 +108,24 @@ Surah* init_surah(char* name, double num_pages, int num_ayahs, int surah_number)
 Quran* init_quran(char* color, double juzz_memorized)
 {
     Quran* quran = malloc(sizeof(Quran));
+    if (quran == NULL) {
+        printf("Failed at line: %d", __LINE__);
+        exit(1);
+    }
     
     (*quran).num_juzz = 30;
     (*quran).num_of_surahs = 114;
     (*quran).juzz = calloc(sizeof(Surah), (*quran).num_juzz);
     if ((*quran).juzz == NULL) {
+        printf("Failed at line: %d", __LINE__);
         exit(1);
     }
     
     (*quran).color = malloc(sizeof(char) * str_len(color) + 1);
+    if ((*quran).color == NULL) {
+        printf("Failed at line: %d", __LINE__);
+        exit(1);
+    }
     str_cpy((*quran).color, color);
     
     (*quran).juzz_memorized = juzz_memorized;
@@ -91,14 +134,16 @@ Quran* init_quran(char* color, double juzz_memorized)
 }
 
 
-void memorize_an_additional_juzz(Quran* quran, double num_of_juzz_memorized) {
+void memorize_an_additional_juzz(Quran* quran, double num_of_juzz_memorized)
+{
     (*quran).juzz_memorized += num_of_juzz_memorized;
 }
 
 
-void insert_surah(Quran* quran, Surah* surah) {
-    int index = (*surah).surah_number;
-    // (*quran).surahs[index] = *surah;
+void insert_surah(Quran* quran, Surah* surah)
+{
+    int index = (*surah).juzz_number;
+    (*quran).juzz->surahs[index] = *surah;
     
     return;
 }
@@ -153,12 +198,12 @@ int surah_number(Surah* surah)
 
 int main(int argc, char* argv[]) {
     Quran* kareems_quran = init_quran("black", 1.5);
-    Surah* naba = init_surah("Naba", 1.75, 40, 78);
-    insert_surah(kareems_quran, naba);
+    // Surah* naba = init_surah("Naba", 1.75, 40, 78);
+    // insert_surah(kareems_quran, naba);
     
-//    print_quran(kareems_quran);
+    // print_quran(kareems_quran);
     
-    printf("number of ayahs in surah Naba is %d\n", num_ayahs_in_surah(naba));
+    // printf("number of ayahs in surah Naba is %d\n", num_ayahs_in_surah(naba));
     
     return 0;
 }
