@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+typedef enum boolean {false, true} Bool;
 
 typedef struct surah
 {
@@ -196,14 +197,62 @@ int surah_number(Surah* surah)
 //}
 
 
+Quran* init_and_fill_quran(char* color, double juzz_memorized) {
+    Quran* quran = init_quran(color, juzz_memorized);
+    // TODO: create each surah and insert
+    
+    
+    return quran;
+}
+
+Bool response_equal(char* correct_string, char* response) {
+    int correct_index = 0, response_index = 0;
+    while (correct_string[correct_index] != '\0') {
+        if (response[response_index] != correct_string[correct_index]) {
+            return false;
+        }
+        correct_index++;
+        response_index++;
+    }
+    
+    return true;
+}
+
 int main(int argc, char* argv[]) {
-    Quran* kareems_quran = init_quran("black", 1.5);
-    // Surah* naba = init_surah("Naba", 1.75, 40, 78);
-    // insert_surah(kareems_quran, naba);
+    Quran* kareems_quran = init_and_fill_quran("black", 1.5);
+    char response[100];
+    char play_again = 'n';
     
-    // print_quran(kareems_quran);
-    
-    // printf("number of ayahs in surah Naba is %d\n", num_ayahs_in_surah(naba));
+    printf("Welcome to Quran Al-Hakeem\n You can ask me the following:\n");
+    printf("The number of juzz in quran, number of ayahs/pages in a surah, and ask for a description of the surah\n");
+    printf("What would you like to do? ");
+    do {
+        fgets(response, sizeof(response), stdin);
+        fflush(stdin); // equivalent to clear_keyboard_buffer();
+        
+        if (response_equal("number of juzz in quran", response)) {
+            printf("There are %d juzz in the Quran\n", 30);
+        }
+        else if (response_equal("number of ayahs in quran", response)) {
+            printf("There are %d ayahs in the Quran\n", 6236);
+        }
+        else if (response_equal("number of ayahs in surah", response)) {
+            // TODO: implement
+        }
+        else if (response_equal("number of pages in surah", response)) {
+            // TODO: implement
+        }
+        else if (response_equal("give me a description of surah", response)) {
+            // TODO: implement
+        }
+        else {
+            printf("invalid response\n");
+        }
+        
+        printf("Do you want to play again? (Y/N) ");
+        scanf("%c", &play_again);
+        fflush(stdin);
+    } while (play_again == 'Y' || play_again == 'y');
     
     return 0;
 }
