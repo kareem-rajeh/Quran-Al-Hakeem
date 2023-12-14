@@ -42,7 +42,10 @@ Quran* init_and_fill_quran(char* color, double juzz_memorized);
 Surah* init_surah(char* juzz_name, int juzz_num, int surah_num, char* surah_name, double num_pages, int num_ayahs, char* description);
 void insert_surah(Quran* quran, Surah* surah);
 void print_surah(Quran* quran, char* surah_name);
-void print_quran_at(Quran* quran, int index);
+void print_surah_with_description(Quran* quran, char* surah_name);
+void print_surah_description(Quran* quran, char* surah_name);
+void print_entire_juzz(Quran* quran, int juzz_number);
+void __print_surah(Surah surah, Bool last_surah);
 void print_quran(Quran* quran);
 int num_ayahs_in_surah(Surah* surah);
 double num_pages_in_surah(Surah* surah);
@@ -51,11 +54,22 @@ void memorize_an_additional_juzz(Quran* quran, double num_of_juzz_memorized);
 int str_len(char* str);
 void str_cpy(char* dest, char* src);
 Bool str_equal(char* correct_string, char* response);
-
+void play_game(Quran* quran);
 
 int main(int argc, char* argv[])
 {
-    Quran* kareems_quran = init_and_fill_quran("black", 1.5);
+    Quran* kareems_quran = init_quran("black", 1.5);
+    Surah* naba = init_surah("Ama", 30, 78, "Naba", 1.75, 40, "Describes yowm al qiyamah");
+    
+    insert_surah(kareems_quran, naba);
+    
+    print_quran(kareems_quran);
+    
+    
+    return 0;
+}
+
+void play_game(Quran* quran) {
     char response[100];
     char play_again = 'n';
     
@@ -96,8 +110,6 @@ int main(int argc, char* argv[])
         fflush(stdin);
         
     } while (play_again == 'Y' || play_again == 'y');
-    
-    return 0;
 }
 
 
@@ -113,19 +125,21 @@ Quran* init_quran(char* color, double juzz_memorized)
     (*quran).num_juzz = 30;
     (*quran).num_of_surahs = 114;
     
-    (*quran).juzz = calloc(sizeof(Surah*), (*quran).num_juzz);
+    (*quran).juzz = calloc(sizeof(Juzz), (*quran).num_juzz);
     if ((*quran).juzz == NULL)
     {
         printf("Failed at line: %d", __LINE__);
         exit(1);
     }
 
-    (*quran).juzz ->surahs = calloc(sizeof(Surah), 37);
-    if ((*quran).juzz ->surahs == NULL)
-    {
-        printf("Failed at line: %d", __LINE__);
-        exit(1);
+    for (int i = 0; i < (*quran).num_juzz; i++) {
+        (*quran).juzz[i].surahs = calloc(sizeof(Surah), 37);
+        if ((*quran).juzz[i].surahs == NULL) {
+            printf("Failed at line: %d", __LINE__);
+            exit(1);
+        }
     }
+
     
     (*quran).juzz ->number_surahs = 0;
     
@@ -146,6 +160,9 @@ Quran* init_and_fill_quran(char* color, double juzz_memorized)
 {
     Quran* quran = init_quran(color, juzz_memorized);
     // TODO: create each surah and insert
+    Surah* naba = init_surah("Ama", 30, 78, "Naba", 1.75, 40, "Describes yowm al qiyamah");
+    
+    insert_surah(quran, naba);
     
     return quran;
 }
@@ -201,46 +218,159 @@ void memorize_an_additional_juzz(Quran* quran, double num_of_juzz_memorized)
 
 void insert_surah(Quran* quran, Surah* surah)
 {
-    int juzz_number = (*surah).juzz_number;
-    int surah_index = (*quran).juzz ->number_surahs;
-    
-    (*quran).juzz[juzz_number].surahs[surah_index] = *surah;
-    
-    (*quran).juzz ->number_surahs++;
-    
+    int juzz_number = (*surah).juzz_number -1;
+    int surah_index = (*quran).juzz[juzz_number].number_surahs;
+
+    Juzz* juzz = &((*quran).juzz[juzz_number]);
+    (*juzz).surahs[surah_index] = *surah;
+
+    (*quran).juzz[juzz_number].number_surahs++;
+
     return;
 }
+
 
 void print_surah(Quran* quran, char* surah_name)
 {
-    int i = 0;
-    int j = 0;
+    int juzz_number = 0;
+    int surah_number = 0;
     Surah surah;
-    while (i < 30) {
-        Juzz current_juzz = (*quran).juzz[i];
-        while (j < 37) {
-            if (str_equal(surah_name, current_juzz.surahs[j].surah_name)) {
-                surah = current_juzz.surahs[j];
+    Bool found_surah = false;
+    
+    while (juzz_number < 30)
+    {
+        Juzz current_juzz = (*quran).juzz[juzz_number];
+        while (surah_number < 37)
+        {
+            if (current_juzz.surahs[surah_number].surah_name == NULL) {
                 break;
             }
-            j++;
+            if (str_equal(surah_name, current_juzz.surahs[surah_number].surah_name))
+            {
+                surah = current_juzz.surahs[surah_number];
+                found_surah = true;
+                break;
+            }
+            surah_number++;
         }
-        i++;
+        if (found_surah) {
+            break;
+        }
+        juzz_number++;
     }
-    printf("Surah (%d) %s has %d ayahs and %.2f pages, ", surah.surah_number, surah_name, surah.num_ayahs, surah.num_pages);
+    printf("Surah (%d) %s has %d ayahs and %.2f pages\n", surah.surah_number, surah_name, surah.num_ayahs, surah.num_pages);
+    
+    return;
+}
+
+void print_surah_with_description(Quran* quran, char* surah_name) {
+    int juzz_number = 0;
+    int surah_number = 0;
+    Surah surah;
+    Bool found_surah = false;
+    
+    while (juzz_number < 30)
+    {
+        Juzz current_juzz = (*quran).juzz[juzz_number];
+        while (surah_number < 37)
+        {
+            if (current_juzz.surahs[surah_number].surah_name == NULL) {
+                break;
+            }
+            if (str_equal(surah_name, current_juzz.surahs[surah_number].surah_name))
+            {
+                surah = current_juzz.surahs[surah_number];
+                found_surah = true;
+                break;
+            }
+            surah_number++;
+        }
+        if (found_surah) {
+            break;
+        }
+        juzz_number++;
+    }
+    printf("Surah (%d) %s has %d ayahs and %.2f pages and %s", surah.surah_number, surah_name, surah.num_ayahs, surah.num_pages, surah.description);
+    
+    return;
+}
+
+void print_surah_description(Quran* quran, char* surah_name)
+{
+    int juzz_number = 0;
+    int surah_number = 0;
+    Surah surah;
+    Bool found_surah = false;
+    
+    while (juzz_number < 30)
+    {
+        Juzz current_juzz = (*quran).juzz[juzz_number];
+        while (surah_number < 37)
+        {
+            if (current_juzz.surahs[surah_number].surah_name == NULL) {
+                break;
+            }
+            if (str_equal(surah_name, current_juzz.surahs[surah_number].surah_name))
+            {
+                surah = current_juzz.surahs[surah_number];
+                found_surah = true;
+                break;
+            }
+            surah_number++;
+        }
+        if (found_surah) {
+            break;
+        }
+        juzz_number++;
+    }
+    printf("%s\n", surah.description);
     
     return;
 }
 
 
-void print_quran_at(Quran* quran, int index)
+void __print_surah(Surah surah, Bool last_surah) {
+    printf("Surah (%d) %s has %d ayahs and %.2f pages, ", surah.surah_number, surah.surah_name, surah.num_ayahs, surah.num_pages);
+    
+    if (last_surah) {
+        printf("]\n");
+    }
+    
+    return;
+}
+
+
+void print_entire_juzz(Quran* quran, int juzz_number)
 {
+    if ((*quran).juzz[juzz_number].number_surahs == 0)
+    {
+        printf("[EMPTY]\n");
+        return;
+    }
+    
+    printf("[");
+    Juzz current_juzz = (*quran).juzz[juzz_number];
+    int i = 0;
+    while (i < current_juzz.number_surahs) {
+        __print_surah(current_juzz.surahs[i], i == current_juzz.number_surahs - 1);
+        i++;
+    }
     return;
 }
 
 
 void print_quran(Quran* quran)
 {
+    printf("[");
+    int juzz_number = 0;
+    while (juzz_number < 30) {
+        if (juzz_number == 30 - 1) {
+            print_entire_juzz(quran, juzz_number);
+            printf("]\n");
+        }
+        else print_entire_juzz(quran, juzz_number);
+    }
+    
     return;
 }
 
@@ -289,6 +419,11 @@ void str_cpy(char* dest, char* src)
 
 
 Bool str_equal(char* correct_string, char* response) {
+    // edge case: Empty string
+    if (response == NULL) {
+        return false;
+    }
+    
     int correct_index = 0, response_index = 0;
     while (correct_string[correct_index] != '\0') {
         if (response[response_index] != correct_string[correct_index]) {
