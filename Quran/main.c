@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
     
     insert_surah(kareems_quran, naba);
     
-    print_quran(kareems_quran);
+    print_entire_juzz(kareems_quran, 30);
     
     
     return 0;
@@ -290,7 +290,7 @@ void print_surah_with_description(Quran* quran, char* surah_name) {
         }
         juzz_number++;
     }
-    printf("Surah (%d) %s has %d ayahs and %.2f pages and %s", surah.surah_number, surah_name, surah.num_ayahs, surah.num_pages, surah.description);
+    printf("Surah (%d) %s has %d ayahs and %.2f pages and %s\n", surah.surah_number, surah_name, surah.num_ayahs, surah.num_pages, surah.description);
     
     return;
 }
@@ -330,10 +330,13 @@ void print_surah_description(Quran* quran, char* surah_name)
 
 
 void __print_surah(Surah surah, Bool last_surah) {
-    printf("Surah (%d) %s has %d ayahs and %.2f pages, ", surah.surah_number, surah.surah_name, surah.num_ayahs, surah.num_pages);
+    printf("Surah (%d) %s has %d ayahs and %.2f pages", surah.surah_number, surah.surah_name, surah.num_ayahs, surah.num_pages);
     
     if (last_surah) {
         printf("]\n");
+    }
+    else {
+        printf(", ");
     }
     
     return;
@@ -342,14 +345,14 @@ void __print_surah(Surah surah, Bool last_surah) {
 
 void print_entire_juzz(Quran* quran, int juzz_number)
 {
-    if ((*quran).juzz[juzz_number].number_surahs == 0)
+    if ((*quran).juzz[juzz_number -1].number_surahs == 0)
     {
         printf("[EMPTY]\n");
         return;
     }
     
     printf("[");
-    Juzz current_juzz = (*quran).juzz[juzz_number];
+    Juzz current_juzz = (*quran).juzz[juzz_number -1];
     int i = 0;
     while (i < current_juzz.number_surahs) {
         __print_surah(current_juzz.surahs[i], i == current_juzz.number_surahs - 1);
