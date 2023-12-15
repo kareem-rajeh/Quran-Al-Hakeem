@@ -7,13 +7,11 @@
 
 #include "quran.h"
 
+int main(void) {
 
-int main(int argc, char* argv[])
-{
-    Quran* kareems_quran = init_and_fill_quran("black", 1.5);
+    Quran* emir_quran = init_and_fill_quran("white", 10);
     
-    print_surah_with_description(kareems_quran, "Naba");
-    
+    print_surah_with_description(emir_quran, "Naba");
     
     return 0;
 }

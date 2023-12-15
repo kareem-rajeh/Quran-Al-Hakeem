@@ -100,7 +100,7 @@ Quran* init_and_fill_quran(char* color, double juzz_memorized)
 {
     Quran* quran = init_quran(color, juzz_memorized);
     // TODO: create each surah and insert
-    Surah* naba = init_surah("Ama", 30, 78, "Naba", 1.75, 40, "Describes yowm al qiyamah");
+    Surah* naba = init_surah("Ama", 30, 78, "Naba", 1.75, 40, "\n\nSurah An-Naba focuses on the Day of Judgment and the consequences of people's actions in this world and the hereafter. \nIt emphasizes the importance of the Quran's message and urges reflection on the signs of God in the natural world as evidence of His power and wisdom. \nThe surah warns of the rejection of the Prophet's message by disbelievers and highlights the ultimate accountability before Allah.\n");
     
     insert_surah(quran, naba);
     
@@ -156,7 +156,7 @@ void memorize_an_additional_juzz(Quran* quran, double num_of_juzz_memorized)
 }
 
 
-void insert_surah(Quran* quran, Surah* surah)
+static void insert_surah(Quran* quran, Surah* surah)
 {
     int juzz_number = (*surah).juzz_number -1;
     int surah_index = (*quran).juzz[juzz_number].number_surahs;
@@ -269,7 +269,7 @@ void print_surah_description(Quran* quran, char* surah_name)
 }
 
 
-void __print_surah(Surah surah, Bool last_surah) {
+static void __print_surah(Surah surah, Bool last_surah) {
     printf("Surah (%d) %s has %d ayahs and %.2f pages", surah.surah_number, surah.surah_name, surah.num_ayahs, surah.num_pages);
     
     if (last_surah) {
@@ -317,25 +317,25 @@ void print_quran(Quran* quran)
     return;
 }
 
-double num_pages_in_surah(Surah* surah)
+static double num_pages_in_surah(Surah* surah)
 {
     return (*surah).num_pages;
 }
 
 
-int num_ayahs_in_surah(Surah* surah)
+static int num_ayahs_in_surah(Surah* surah)
 {
     return (*surah).num_ayahs;
 }
 
 
-int surah_number(Surah* surah)
+static int surah_number(Surah* surah)
 {
     return (*surah).surah_number;
 }
 
 
-int str_len(char* str)
+static int str_len(char* str)
 {
     int len = 0;
     while (str[len] != '\0') {
@@ -346,7 +346,7 @@ int str_len(char* str)
 }
 
 
-void str_cpy(char* dest, char* src)
+static void str_cpy(char* dest, char* src)
 {
     int src_index = 0;
     int dest_index = 0;
@@ -361,7 +361,7 @@ void str_cpy(char* dest, char* src)
 }
 
 
-Bool str_equal(char* correct_string, char* response) {
+static Bool str_equal(char* correct_string, char* response) {
     // edge case: Empty string
     if (response == NULL) {
         return false;
