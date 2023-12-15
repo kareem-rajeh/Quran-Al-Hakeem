@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C549B0592B2B84FB000B6E26 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = C549B0582B2B84FB000B6E26 /* main.c */; };
+		C59FF9472B2BD16E00FCF741 /* quran.c in Sources */ = {isa = PBXBuildFile; fileRef = C59FF9462B2BD16E00FCF741 /* quran.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		C549B0552B2B84FB000B6E26 /* Quran */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Quran; sourceTree = BUILT_PRODUCTS_DIR; };
 		C549B0582B2B84FB000B6E26 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		C59FF9452B2BD16E00FCF741 /* quran.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quran.h; sourceTree = "<group>"; };
+		C59FF9462B2BD16E00FCF741 /* quran.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = quran.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				C549B0582B2B84FB000B6E26 /* main.c */,
+				C59FF9452B2BD16E00FCF741 /* quran.h */,
+				C59FF9462B2BD16E00FCF741 /* quran.c */,
 			);
 			path = Quran;
 			sourceTree = "<group>";
@@ -120,6 +125,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C549B0592B2B84FB000B6E26 /* main.c in Sources */,
+				C59FF9472B2BD16E00FCF741 /* quran.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
